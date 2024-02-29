@@ -4,7 +4,7 @@ import os
 from scipy.signal import medfilt
 from sklearn.preprocessing import StandardScaler
 
-# cargamos el csv
+# cargamos el csv ANDREA_mano_reposo_excel
 ruta = os.path.dirname(os.path.abspath(__file__))
 ruta_archivo = os.path.join(ruta, 'ANDREA_mano_reposo_excel.csv')
 
