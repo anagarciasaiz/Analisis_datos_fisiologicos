@@ -4,20 +4,31 @@ import os
 from scipy.signal import medfilt
 from sklearn.preprocessing import StandardScaler
 
-# cargamos el csv ANDREA_mano_reposo_excel
-ruta = os.path.dirname(os.path.abspath(__file__))
-ruta_archivo = os.path.join(ruta, 'ANDREA_mano_reposo_excel.csv')
+directorio = os.path.dirname(__file__)
 
-# Cargar el archivo CSV en un DataFrame de pandas
-df_andmanorep = pd.read_csv(ruta_archivo, encoding='utf-8', delimiter=';')
+def filtrado_y_normal_edg(archivo, nuevonombre):
+    """
+    Función que recibe un archivo .csv, una columna y un tamaño de ventana para aplicar un filtrado de mediana y una normalización z-score.
+    """
+    # Cargar el archivo CSV en un DataFrame de pandas
+    df_ruta =  os.path.join(os.path.dirname(__file__), archivo)
+    df = pd.read_csv(df_ruta, delimiter=';')   
 
-# Filtrado de ruido de mediana 
-window_size = 3 #Tamaño de la ventana 
-df_andmanorep['A3_filtrado'] = medfilt(df_andmanorep['A3'], kernel_size=window_size)
+    # Filtrado de ruido de mediana 
+    window_size = 3 #Tamaño de la ventana 
+    df['A3_filtrado'] = medfilt(df['A3'], kernel_size=window_size)
 
-# Normalizar los datos utilizando normalización z-score
-scaler = StandardScaler()
-df_andmanorep['A3_normalizado'] = scaler.fit_transform(df_andmanorep[['A3_filtrado']])
-df_andmanorep.to_csv('datos_edg_filtrados_normalizados.csv', index=False)
+    # Normalizar los datos utilizando normalización z-score
+    scaler = StandardScaler()
+    df['A3_normalizado'] = scaler.fit_transform(df[['A3_filtrado']])
+    df.to_csv(os.path.join(directorio, nuevonombre), index=False)
+    
+    return df
+filtrado_y_normal_edg('ANDREA_mano_reposo_excel.csv', 'ANDREA_mano_reposo_filtrado.csv')
+filtrado_y_normal_edg('ANDREA_mano_postejercicio_excel.csv', 'ANDREA_mano_postejercicio_filtrado.csv')
+filtrado_y_normal_edg('ANA_mano_reposo_excel.csv', 'ANA_mano_reposo_filtrado.csv')
+filtrado_y_normal_edg('ANA_mano_postejercicio.csv', 'ANA_mano_postejercicio_filtrado.csv')
+
+
 
 
