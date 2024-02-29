@@ -12,14 +12,17 @@ df = pd.read_csv(ruta_archivo, delimiter=',')
 #Eventos (contracción - relajación), nos vamos a basar en un umbral de amplitud. 
 #Si la amplitud supera un umbral, se considera que el músculo está activado
 #Si la amplitud es menor al umbral, se considera que el músculo está relajado
-#El umbral se puede calcular como el 50% de la amplitud máxima
-umbral = df['A1_filtrado'].max() * 0.5
+#Calculamos el umbral con la mediana
+umbral = df['A1_filtrado'].median()
 print('Umbral:', umbral)
 
 #Creamos una nueva columna para los eventos
 df['Evento'] = 'Relajado'
 df.loc[df['A1_filtrado'] > umbral, 'Evento'] = 'Contraido'
 print(df.head())
+
+#pasamos a csv
+df.to_csv(os.path.join(ruta, 'brazo_Andrea_con_eventos.csv'), index=False)
 
 #Amplitud señal: nivel de activación muscular
 #La amplitud de la señal nos indica el nivel de activación muscular.
