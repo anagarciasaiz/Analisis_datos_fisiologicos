@@ -55,6 +55,17 @@ def limpiar_csv(csv, columnas_eliminar):
     
     return df
 
+def ruido_normalizacion(df, columna):
+    # Aplicar filtro de mediana para el filtrado de ruido
+    df[columna + '_filtrado'] = medfilt(df[columna], kernel_size=3)
+
+    # Normalizar los datos utilizando normalización z-score
+    scaler = StandardScaler()
+    df[columna + '_normalizado'] = scaler.fit_transform(df[[columna + '_filtrado']])
+
+    return df
+
+# Cargar los datos de los archivos CSV y los limpiamos
 df_andrea_brazo = limpiar_csv('Andrea_Brazo_excel.csv', ['A2', 'A3', 'A4', 'A5', 'A6'])
 print('ANDREA BRAZO')
 print(df_andrea_brazo.head())
@@ -62,3 +73,16 @@ print(df_andrea_brazo.head())
 df_ana_brazo = limpiar_csv('brazo_Ana_excel.csv', None)
 print('ANA BRAZO')
 print(df_ana_brazo.head())
+
+# Aplicar filtro de mediana para el filtrado de ruido y normalizamos
+df_andrea_brazo = ruido_normalizacion(df_andrea_brazo, 'A1')
+print('ANDREA BRAZO FILTRADO Y NORMALIZADO')
+print(df_andrea_brazo.head())
+
+df_ana_brazo = ruido_normalizacion(df_ana_brazo, 'A1')
+print('ANA BRAZO FILTRADO Y NORMALIZADO')
+print(df_ana_brazo.head())
+
+# Guardar los datos filtrados y normalizados en un nuevo archivo CSV
+df_andrea_brazo.to_csv('andrea_brazo_filtrado_normalizado.csv', index=False)
+df_ana_brazo.to_csv('ana_brazo_filtrado_normalizado.csv', index=False)
