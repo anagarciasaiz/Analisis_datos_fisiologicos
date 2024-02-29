@@ -29,8 +29,7 @@ print('Amplitud:', amplitud)
 
 #Frecuencia (fatiga muscular)
 #La frecuencia de la señal nos indica la fatiga muscular.
-frecuencia = df['A1_filtrado'].count() / df['A1_filtrado'].idxmax()
-print('Frecuencia:', frecuencia)
+
 
 #Patrones de activación muscular
 #Los patrones de activación muscular nos indican cómo se activa el músculo.
