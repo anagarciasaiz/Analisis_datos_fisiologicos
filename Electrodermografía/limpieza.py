@@ -50,7 +50,8 @@ def extraccion_caract(archivo, nuevonombre):
     amplitud_picos = df['A3_filtrado'].iloc[pico]
     
     # Dataframe con las cosas extraidas
-    df_caract = pd.DataFrame({'picos': pico, 'intervalos': intervalos, 'amplitud_picos': amplitud_picos})
+    print(amplitud_picos)
+    df_caract = pd.DataFrame({'amplitud_picos': amplitud_picos})
     
     # Lo guardo en un nuevo csv
     df_caract.to_csv(os.path.join(directorio, nuevonombre), index=False)
