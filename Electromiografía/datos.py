@@ -26,7 +26,7 @@ print(df.columns)
 df.columns = ['nSeq', 'I1', 'I2', 'O1', 'O2','A1', 'A2', 'A3', 'A4', 'A5', 'A6']
 columnas_eliminar =['A2', 'A3', 'A4', 'A5', 'A6']
 df = df.drop(columnas_eliminar, axis = 1)
-df.head()
+print(df.head())
 '''
 # Aplicar filtro de mediana para el filtrado de ruido
 df['emg_filtrado'] = medfilt(df['emg'], kernel_size=3)
