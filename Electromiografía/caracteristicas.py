@@ -1,6 +1,17 @@
 import pandas as pd
 import os
 
+'''
+MUSCULAR
+- eventos (contraccion-relajacion)
+- amplitud señal: nivel activación muscular
+- frecuencia (fatiga muscular)
+- patrones activación muscular
+- distancia entre picos
+
+Falta hacer función y ver que de lo de arriba #Me canse
+'''
+
 #Cojemos la ruta del archivo
 ruta = os.path.dirname(os.path.abspath(__file__))
 #Contruimos la ruta del archivo
@@ -38,41 +49,6 @@ print(df.head())
 
 df.to_csv(os.path.join(ruta, 'brazo_Andrea_con_eventos.csv'), index=False)
 
-'''#Creamos una nueva columna para los eventos
-df['Evento'] = 'Relajado'
-df.loc[df['A1_filtrado'] > umbral, 'Evento'] = 'Contraido'
-print(df.head())
-
-#pasamos a csv
-df.to_csv(os.path.join(ruta, 'brazo_Andrea_con_eventos.csv'), index=False)
-
-#Amplitud señal: nivel de activación muscular
-#La amplitud de la señal nos indica el nivel de activación muscular.
-
-# Calcular la duración de cada estado
-eventos = df['Evento'].tolist()
-duraciones = []
-estado_actual = eventos[0]
-duracion_actual = 1
-
-for evento in eventos[1:]:
-    if evento == estado_actual:
-        duracion_actual += 1
-    else:
-        duraciones.append((estado_actual, duracion_actual))
-        estado_actual = evento
-        duracion_actual = 1
-
-duraciones.append((estado_actual, duracion_actual))
-
-print("Duración de cada estado:")
-for estado, duracion in duraciones:
-    print(f"Estado: {estado}, Duración: {duracion} muestras")
-
-# Calcular la frecuencia de cambios entre estados
-cambios = sum(1 for i in range(1, len(eventos)) if eventos[i] != eventos[i-1])
-frecuencia_cambios = cambios / len(eventos)
-print(f"Frecuencia de cambios entre estados: {frecuencia_cambios}")'''
 
 #Frecuencia (fatiga muscular)
 #La frecuencia de la señal nos indica la fatiga muscular.
