@@ -27,13 +27,13 @@ df.columns = ['nSeq', 'I1', 'I2', 'O1', 'O2','A1', 'A2', 'A3', 'A4', 'A5', 'A6']
 columnas_eliminar =['A2', 'A3', 'A4', 'A5', 'A6']
 df = df.drop(columnas_eliminar, axis = 1)
 print(df.head())
-'''
+
 # Aplicar filtro de mediana para el filtrado de ruido
-df['emg_filtrado'] = medfilt(df['emg'], kernel_size=3)
+df['A1_filtrado'] = medfilt(df['A1'], kernel_size=3)
 
 # Normalizar los datos utilizando normalización z-score
 scaler = StandardScaler()
-df['emg_normalizado'] = scaler.fit_transform(df[['emg_filtrado']])
+df['A1_normalizado'] = scaler.fit_transform(df[['A1_filtrado']])
 
 # Guardar los datos filtrados y normalizados en un nuevo archivo CSV
-df.to_csv('datos_emg_filtrados_normalizados.csv', index=False)'''
+df.to_csv('datos_emg_filtrados_normalizados.csv', index=False)
