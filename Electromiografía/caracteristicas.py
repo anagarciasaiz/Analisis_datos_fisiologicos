@@ -1,7 +1,12 @@
 import pandas as pd
+import os
 
-#Cargamos el archivo csv
-df = pd.read_csv('Electromiograf%C3%ADa/Andrea_Brazo_excel.csv', delimiter=';')
+#Cojemos la ruta del archivo
+ruta = os.path.dirname(os.path.abspath(__file__))
+#Contruimos la ruta del archivo
+ruta_archivo = os.path.join(ruta, 'brazo_Andrea_filtrado_normalizado.csv')
+# Cargar el archivo CSV en un DataFrame de pandas
+df = pd.read_csv(ruta_archivo, delimiter=';')
 
 #Eventos (contracción - relajación), nos vamos a basar en un umbral de amplitud. 
 #Si la amplitud supera un umbral, se considera que el músculo está activado
