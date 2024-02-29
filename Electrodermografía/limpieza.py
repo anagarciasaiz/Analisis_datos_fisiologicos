@@ -35,11 +35,12 @@ filtrado_y_normal_edg('ANA_mano_postejercicio.csv', 'ANA_mano_postejercicio_filt
 def extraccion_caract(archivo, nuevonombre):
     # Cargar el archivo CSV en un DataFrame de pandas
     df_ruta =  os.path.join(os.path.dirname(__file__), archivo)
-    df = pd.read_csv(df_ruta, delimiter=';')   
+    df = pd.read_csv(df_ruta, delimiter=',')   
+    print(df.head())
     
-
     # Identificamos los picos
-    pico, _ = find_peaks(df['A3_filtrado'], distance=10) # La _ es porque find_peaks devuelve dos valores, pero el segundo es un diccionario que no vamos a usar. Lo metemos en la variable _
+    pico, _ = find_peaks(df['A3_filtrado'], distance=10) 
+    # La _ es porque find_peaks devuelve dos valores, pero el segundo es un diccionario que no vamos a usar. Lo metemos en la variable _
     
     # Cálculo de intervalos entre picos
     picos_indices = pico.tolist()
@@ -49,7 +50,7 @@ def extraccion_caract(archivo, nuevonombre):
     amplitud_picos = df['A3_filtrado'].iloc[pico]
     
     # Dataframe con las cosas extraidas
-    df_caract = pd.DataFrame({'picos': picos_indices, 'intervalos': intervalos, 'amplitud_picos': amplitud_picos})
+    df_caract = pd.DataFrame({'picos': pico, 'intervalos': intervalos, 'amplitud_picos': amplitud_picos})
     
     # Lo guardo en un nuevo csv
     df_caract.to_csv(os.path.join(directorio, nuevonombre), index=False)
