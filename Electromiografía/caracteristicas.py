@@ -16,7 +16,29 @@ df = pd.read_csv(ruta_archivo, delimiter=',')
 umbral = df['A1_filtrado'].median()
 print('Umbral:', umbral)
 
-#Creamos una nueva columna para los eventos
+# Identificar los cambios significativos en la señal
+cambios = (df['A1_filtrado'] > umbral).astype(int).diff().fillna(0)
+grupos = cambios.abs().cumsum()
+
+# Agregar la información de los grupos al DataFrame
+df['Grupo'] = grupos
+
+# Calcular la duración de cada grupo
+duraciones_grupo = df.groupby('Grupo').size()
+
+# Identificar el estado (contraído o relajado) de cada grupo
+estados_grupo = df.groupby('Grupo')['A1_filtrado'].mean() > umbral
+estados_grupo = estados_grupo.replace({True: 'Contraido', False: 'Relajado'})
+
+# Agregar la información de los estados al DataFrame
+df['Estado'] = grupos.map(estados_grupo)
+
+# Mostrar el resultado
+print(df.head())
+
+df.to_csv(os.path.join(ruta, 'brazo_Andrea_con_eventos.csv'), index=False)
+
+'''#Creamos una nueva columna para los eventos
 df['Evento'] = 'Relajado'
 df.loc[df['A1_filtrado'] > umbral, 'Evento'] = 'Contraido'
 print(df.head())
@@ -50,7 +72,7 @@ for estado, duracion in duraciones:
 # Calcular la frecuencia de cambios entre estados
 cambios = sum(1 for i in range(1, len(eventos)) if eventos[i] != eventos[i-1])
 frecuencia_cambios = cambios / len(eventos)
-print(f"Frecuencia de cambios entre estados: {frecuencia_cambios}")
+print(f"Frecuencia de cambios entre estados: {frecuencia_cambios}")'''
 
 #Frecuencia (fatiga muscular)
 #La frecuencia de la señal nos indica la fatiga muscular.
