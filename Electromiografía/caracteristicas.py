@@ -23,9 +23,31 @@ print(df.head())
 
 #Amplitud señal: nivel de activación muscular
 #La amplitud de la señal nos indica el nivel de activación muscular.
-amplitud = df['A1_filtrado'].max() - df['A1_filtrado'].min()
-print('Amplitud:', amplitud)
 
+# Calcular la duración de cada estado
+eventos = df['Evento'].tolist()
+duraciones = []
+estado_actual = eventos[0]
+duracion_actual = 1
+
+for evento in eventos[1:]:
+    if evento == estado_actual:
+        duracion_actual += 1
+    else:
+        duraciones.append((estado_actual, duracion_actual))
+        estado_actual = evento
+        duracion_actual = 1
+
+duraciones.append((estado_actual, duracion_actual))
+
+print("Duración de cada estado:")
+for estado, duracion in duraciones:
+    print(f"Estado: {estado}, Duración: {duracion} muestras")
+
+# Calcular la frecuencia de cambios entre estados
+cambios = sum(1 for i in range(1, len(eventos)) if eventos[i] != eventos[i-1])
+frecuencia_cambios = cambios / len(eventos)
+print(f"Frecuencia de cambios entre estados: {frecuencia_cambios}")
 
 #Frecuencia (fatiga muscular)
 #La frecuencia de la señal nos indica la fatiga muscular.
