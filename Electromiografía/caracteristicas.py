@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 
 '''
 MUSCULAR
@@ -51,8 +53,22 @@ df.to_csv(os.path.join(ruta, 'brazo_Andrea_con_eventos.csv'), index=False)
 
 
 #Frecuencia (fatiga muscular)
-#La frecuencia de la señal nos indica la fatiga muscular.
+#Utilizamos la transformada de Fourier para calcular la frecuencia de la señal
 
+transformada = np.fft.fft(df['A1_filtrado'])
+
+# Calcular las frecuencias correspondientes a cada componente de la transformada
+frecuencias = np.fft.fftfreq(len(df['A1_filtrado']))
+
+# Graficar el espectro de frecuencias
+plt.figure(figsize=(12, 6))
+plt.plot(frecuencias, np.abs(transformada))
+plt.xlabel('Frecuencia (Hz)')
+plt.ylabel('Amplitud')
+plt.title('Espectro de frecuencias de la señal de electromiografía')
+plt.xlim(0, 1000)
+plt.ylim(0, 1000)
+plt.show()
 
 #Patrones de activación muscular
 #Los patrones de activación muscular nos indican cómo se activa el músculo.
