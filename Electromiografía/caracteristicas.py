@@ -75,6 +75,16 @@ plt.show()
 #Los patrones de activación muscular nos indican cómo se activa el músculo.
 
 
-#Distancia entre picos
+#Distancia entre picos, DARLE UNA VUELTA ESTÁ RARETE
+max_pico_contraido = grupo_contraido['A1_filtrado'].max()
+min_pico_contraido = grupo_contraido['A1_filtrado'].min()
+distancia_picos_contraido = max_pico_contraido - min_pico_contraido
+
+max_pico_relajado = grupo_relajado['A1_filtrado'].max()
+min_pico_relajado = grupo_relajado['A1_filtrado'].min()
+distancia_picos_relajado = max_pico_relajado - min_pico_relajado
+
+print('Distancia entre picos (Contraido):', distancia_picos_contraido)
+print('Distancia entre picos (Relajado):', distancia_picos_relajado)
 
 
