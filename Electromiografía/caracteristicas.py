@@ -20,7 +20,6 @@ Falta hacer función y ver que de lo de arriba #Me canse
 
 def eventos(df, nombre):
     umbral = df['A1_filtrado'].median()
-    print('Umbral:', umbral)
 
     # Identificar los cambios significativos en la señal
     cambios = (df['A1_filtrado'] > umbral).astype(int).diff().fillna(0)
@@ -31,6 +30,7 @@ def eventos(df, nombre):
 
     # Calcular la duración de cada grupo
     duraciones_grupo = df.groupby('Grupo').size()
+    print(nombre + ' Duraciones de grupo')
     print(duraciones_grupo)
     
     # Identificar el estado (contraído o relajado) de cada grupo
@@ -40,8 +40,7 @@ def eventos(df, nombre):
     # Agregar la información de los estados al DataFrame
     df['Estado'] = grupos.map(estados_grupo)
 
-    # Mostrar el resultado
-    print(df.head())
+    # Guardar el DataFrame con la información de los eventos
     df.to_csv(os.path.join(ruta, nombre + '_eventos.csv'), index=False)
     
     return df
@@ -49,7 +48,7 @@ def eventos(df, nombre):
 
 
 #Frecuencia (fatiga muscular)
-def frecuencia(df):
+def frecuencia(df, nombre):
     #Frecuencia, número de repeticiones de un fenómeno periódico en una unidad de tiempo.
     # Calcular la frecuencia dominante para cada grupo
     grupo_contraido = df[df['Estado'] == 'Contraido']
@@ -63,14 +62,14 @@ def frecuencia(df):
     plt.hist(frecuencia_dominante_relajado, alpha=0.5, label='Relajado', color='green')
     plt.xlabel('Frecuencia Dominante')
     plt.ylabel('Frecuencia')
-    plt.title('Distribución de Frecuencias Dominantes por Grupo')
+    plt.title('Distribución de Frecuencias Dominantes por Grupo', nombre)
     plt.legend(loc='upper right')
     plt.show()
     
 
 
 #Patrones de activación muscular
-def patrones_activacion(df):
+def patrones_activacion(df, nombre):
     #Los patrones de activación muscular nos indican cómo se activa el músculo.
     # Para ver la activación muscular, voy a calcular estadística simples de cada grupo y estado, contraído y relajado, y las voy a graficar para compararlos
     estadisticas_grupo = df.groupby(['Grupo', 'Estado'])['A1_filtrado'].describe()
@@ -83,7 +82,7 @@ def patrones_activacion(df):
         
     plt.xlabel('Grupo')
     plt.ylabel('Media de la señal filtrada')
-    plt.title('Media de la señal filtrada para cada grupo y estado')
+    plt.title('Media de la señal filtrada para cada grupo y estado', nombre)
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -148,12 +147,12 @@ eventos(df_andrea, 'Brazo_Andrea')
 eventos(df_ana, 'Brazo_Ana')
 
 #Frecuencia (fatiga muscular)
-frecuencia(df_andrea)
-frecuencia(df_ana)
+frecuencia(df_andrea, 'Brazo_Andrea')
+frecuencia(df_ana, 'Brazo_Ana')
 
 #Patrones de activación muscular
-patrones_activacion(df_andrea)
-patrones_activacion(df_ana)
+patrones_activacion(df_andrea, 'Brazo_Andrea')
+patrones_activacion(df_ana, 'Brazo_Ana')
 
 ''' En la gráfica podemos observar que según avanzan los grupos (y por tanto el tiempo), la media (los puntos) de la señal es más alta, indicando que el músculo está más activado. 
 Sin embargo, a su vez, la media de la relajación disminuye, indicando que el músculo se relaja más al estar más cansado.
