@@ -97,27 +97,21 @@ Además, la desviación típica, que son las barras, cada vez es mayor, indicand
 # Filtrar por el estado "Contraido" y obtener el valor máximo de "A1_filtrado" para cada grupo
 maximos_contraido = df[df['Estado'] == 'Contraido'].groupby('Grupo')['A1_filtrado'].max().reset_index()
 
-# Agregar la columna "Estado" con el valor "Contraido" para cada grupo
-maximos_contraido['Estado'] = 'Contraido'
-
 # Mostrar el grupo, el estado y el valor máximo de A1_filtrado para cada grupo y estado
 print(maximos_contraido)
-'''#calculamos la diferencia de los valores dos a dos
-diferencias_contraidos_max = maximos_contraidos.diff().dropna()
+
+# Filtrar por el estado "Relajado" y obtener el valor mínimo de "A1_filtrado" para cada grupo
+minimos_contraidos = df[df['Estado'] == 'Relajado'].groupby('Grupo')['A1_filtrado'].min().reset_index()
+
+# Mostrar el grupo, el estado y el valor mínimo de A1_filtrado para cada grupo y estado
+print(minimos_contraidos)
+
+# Calcular la diferencia de los valores dos a dos
+diferencias_contraidos_max = maximos_contraido.diff().dropna()
 diferencias_contraido_min = minimos_contraidos.diff().dropna()
-# Crear una lista de los grupos entre los cuales se calculan las diferencias
-grupos = list(zip(maximos_contraidos.index[:-1], maximos_contraidos.index[1:]))
-
-# Crear un DataFrame con las diferencias y los pares de grupos
-df_diferencias = pd.DataFrame({
-    'Grupo1': [gr[0] for gr in grupos],
-    'Grupo2': [gr[1] for gr in grupos],
-    'Diferencia_max': diferencias_contraidos_max.values,
-    'Diferencia_min': diferencias_contraido_min.values
-})
-
-# Fusionar los datos de diferencias con el DataFrame original
-df = pd.merge(df, df_diferencias, left_index=True, right_index=True)
-
-# Guardar el DataFrame modificado de vuelta al archivo CSV
-df.to_csv('tu_archivo.csv', index=False)'''
+#Añadimos columna indicando los grupos que se comparan
+diferencias_contraidos_max['Grupo1'] = maximos_contraido['Grupo'].values[:-1]
+diferencias_contraidos_max['Grupo2'] = maximos_contraido['Grupo'].values[1:]
+#Eliminamos la columna de grupo
+diferencias_contraidos_max = diferencias_contraidos_max.drop(columns='Grupo')
+print(diferencias_contraidos_max)
