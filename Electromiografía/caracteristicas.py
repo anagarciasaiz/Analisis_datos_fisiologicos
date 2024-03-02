@@ -95,9 +95,8 @@ Además, la desviación típica, que son las barras, cada vez es mayor, indicand
 
 #Distancia entre picos
 #obtenemos los maximos y minimos de cada grupo y calculamos la distancia entre ellos
-maximos_contraidos = grupo_contraido.groupby('Grupo')['A1_filtrado'].max()
-minimos_contraidos = grupo_contraido.groupby('Grupo')['A1_filtrado'].min()
-
+maximos_contraidos = df.groupby(['Grupo', 'Estado'])['A1_filtrado'].max().reset_index()
+minimos_contraidos = df.groupby(['Grupo', 'Estado'])['A1_filtrado'].min().reset_index()
 print(maximos_contraidos)
 #calculamos la diferencia de los valores dos a dos
 diferencias_contraidos_max = maximos_contraidos.diff().dropna()
