@@ -75,16 +75,28 @@ plt.show()
 #Los patrones de activación muscular nos indican cómo se activa el músculo.
 
 
-#Distancia entre picos, DARLE UNA VUELTA ESTÁ RARETE
-max_pico_contraido = grupo_contraido['A1_filtrado'].max()
-min_pico_contraido = grupo_contraido['A1_filtrado'].min()
-distancia_picos_contraido = max_pico_contraido - min_pico_contraido
+#Distancia entre picos
+#obtenemos los maximos y minimos de cada grupo y calculamos la distancia entre ellos
+maximos_contraidos = grupo_contraido.groupby('Grupo')['A1_filtrado'].max()
+minimos_contraidos = grupo_contraido.groupby('Grupo')['A1_filtrado'].min()
 
-max_pico_relajado = grupo_relajado['A1_filtrado'].max()
-min_pico_relajado = grupo_relajado['A1_filtrado'].min()
-distancia_picos_relajado = max_pico_relajado - min_pico_relajado
+print(maximos_contraidos)
+#calculamos la diferencia de los valores dos a dos
+diferencias_contraidos_max = maximos_contraidos.diff().dropna()
+diferencias_contraido_min = minimos_contraidos.diff().dropna()
+# Crear una lista de los grupos entre los cuales se calculan las diferencias
+grupos = list(zip(maximos_contraidos.index[:-1], maximos_contraidos.index[1:]))
 
-print('Distancia entre picos (Contraido):', distancia_picos_contraido)
-print('Distancia entre picos (Relajado):', distancia_picos_relajado)
+# Crear un DataFrame con las diferencias y los pares de grupos
+df_diferencias = pd.DataFrame({
+    'Grupo1': [gr[0] for gr in grupos],
+    'Grupo2': [gr[1] for gr in grupos],
+    'Diferencia_max': diferencias_contraidos_max.values,
+    'Diferencia_min': diferencias_contraido_min.values
+})
 
+# Fusionar los datos de diferencias con el DataFrame original
+df = pd.merge(df, df_diferencias, left_index=True, right_index=True)
 
+# Guardar el DataFrame modificado de vuelta al archivo CSV
+df.to_csv('tu_archivo.csv', index=False)
