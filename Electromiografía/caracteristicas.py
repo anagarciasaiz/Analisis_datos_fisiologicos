@@ -53,22 +53,23 @@ df.to_csv(os.path.join(ruta, 'brazo_Andrea_con_eventos.csv'), index=False)
 
 
 #Frecuencia (fatiga muscular)
-#Utilizamos la transformada de Fourier para calcular la frecuencia de la señal
+#Frecuencia, número de repeticiones de un fenómeno periódico en una unidad de tiempo.
+# Calcular la frecuencia dominante para cada grupo
+grupo_contraido = df[df['Estado'] == 'Contraido']
+grupo_relajado = df[df['Estado'] == 'Relajado']
 
-transformada = np.fft.fft(df['A1_filtrado'])
+frecuencia_dominante_contraido = grupo_contraido['A1_filtrado'].values  # Reemplaza 'A1' con la columna que contiene tus datos de frecuencia
+frecuencia_dominante_relajado = grupo_relajado['A1_filtrado'].values  # Reemplaza 'A1' con la columna que contiene tus datos de frecuencia
 
-# Calcular las frecuencias correspondientes a cada componente de la transformada
-frecuencias = np.fft.fftfreq(len(df['A1_filtrado']))
-
-# Graficar el espectro de frecuencias
-plt.figure(figsize=(12, 6))
-plt.plot(frecuencias, np.abs(transformada))
-plt.xlabel('Frecuencia (Hz)')
-plt.ylabel('Amplitud')
-plt.title('Espectro de frecuencias de la señal de electromiografía')
-plt.xlim(0, 1000)
-plt.ylim(0, 1000)
+# Visualizar las distribuciones de frecuencias dominantes para cada grupo
+plt.hist(frecuencia_dominante_contraido, alpha=0.5, label='Contraido', color='blue')
+plt.hist(frecuencia_dominante_relajado, alpha=0.5, label='Relajado', color='green')
+plt.xlabel('Frecuencia Dominante')
+plt.ylabel('Frecuencia')
+plt.title('Distribución de Frecuencias Dominantes por Grupo')
+plt.legend(loc='upper right')
 plt.show()
+
 
 #Patrones de activación muscular
 #Los patrones de activación muscular nos indican cómo se activa el músculo.
@@ -92,6 +93,16 @@ Sin embargo, a su vez, la media de la relajación disminuye, indicando que el m�
 
 Además, la desviación típica, que son las barras, cada vez es mayor, indicando que la señal es más variable, lo que indica que el músculo está más fatigado.'''
 
-#Distancia entre picos
+#Distancia entre picos, DARLE UNA VUELTA ESTÁ RARETE
+max_pico_contraido = grupo_contraido['A1_filtrado'].max()
+min_pico_contraido = grupo_contraido['A1_filtrado'].min()
+distancia_picos_contraido = max_pico_contraido - min_pico_contraido
+
+max_pico_relajado = grupo_relajado['A1_filtrado'].max()
+min_pico_relajado = grupo_relajado['A1_filtrado'].min()
+distancia_picos_relajado = max_pico_relajado - min_pico_relajado
+
+print('Distancia entre picos (Contraido):', distancia_picos_contraido)
+print('Distancia entre picos (Relajado):', distancia_picos_relajado)
 
 
