@@ -72,7 +72,25 @@ plt.show()
 
 #Patrones de activación muscular
 #Los patrones de activación muscular nos indican cómo se activa el músculo.
+# Para ver la activación muscular, voy a calcular estadística simples de cada grupo y estado, contraído y relajado, y las voy a graficar para compararlos
+estadisticas_grupo = df.groupby(['Grupo', 'Estado'])['A1_filtrado'].describe()
+print(estadisticas_grupo)
+plt.figure(figsize=(20, 20))
+for estado in df['Estado'].unique():
+    datos_estado = estadisticas_grupo.loc[(slice(None), estado), :]
+    plt.errorbar(datos_estado.index.get_level_values('Grupo'), datos_estado['mean'], yerr=datos_estado['std'], label=estado, fmt='-o')
+    
+plt.xlabel('Grupo')
+plt.ylabel('Media de la señal filtrada')
+plt.title('Media de la señal filtrada para cada grupo y estado')
+plt.legend()
+plt.grid(True)
+plt.show()
 
+''' En la gráfica podemos observar que según avanzan los grupos (y por tanto el tiempo), la media (los puntos) de la señal es más alta, indicando que el músculo está más activado. 
+Sin embargo, a su vez, la media de la relajación disminuye, indicando que el músculo se relaja más al estar más cansado.
+
+Además, la desviación típica, que son las barras, cada vez es mayor, indicando que la señal es más variable, lo que indica que el músculo está más fatigado.'''
 
 #Distancia entre picos
 
