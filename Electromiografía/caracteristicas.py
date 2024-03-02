@@ -94,11 +94,15 @@ Sin embargo, a su vez, la media de la relajación disminuye, indicando que el m�
 Además, la desviación típica, que son las barras, cada vez es mayor, indicando que la señal es más variable, lo que indica que el músculo está más fatigado.'''
 
 #Distancia entre picos
-#obtenemos los maximos y minimos de cada grupo y calculamos la distancia entre ellos
-maximos_contraidos = df.groupby(['Grupo', 'Estado'])['A1_filtrado'].max().reset_index()
-minimos_contraidos = df.groupby(['Grupo', 'Estado'])['A1_filtrado'].min().reset_index()
-print(maximos_contraidos)
-#calculamos la diferencia de los valores dos a dos
+# Filtrar por el estado "Contraido" y obtener el valor máximo de "A1_filtrado" para cada grupo
+maximos_contraido = df[df['Estado'] == 'Contraido'].groupby('Grupo')['A1_filtrado'].max().reset_index()
+
+# Agregar la columna "Estado" con el valor "Contraido" para cada grupo
+maximos_contraido['Estado'] = 'Contraido'
+
+# Mostrar el grupo, el estado y el valor máximo de A1_filtrado para cada grupo y estado
+print(maximos_contraido)
+'''#calculamos la diferencia de los valores dos a dos
 diferencias_contraidos_max = maximos_contraidos.diff().dropna()
 diferencias_contraido_min = minimos_contraidos.diff().dropna()
 # Crear una lista de los grupos entre los cuales se calculan las diferencias
@@ -116,4 +120,4 @@ df_diferencias = pd.DataFrame({
 df = pd.merge(df, df_diferencias, left_index=True, right_index=True)
 
 # Guardar el DataFrame modificado de vuelta al archivo CSV
-df.to_csv('tu_archivo.csv', index=False)
+df.to_csv('tu_archivo.csv', index=False)'''
