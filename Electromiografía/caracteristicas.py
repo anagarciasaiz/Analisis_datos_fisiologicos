@@ -62,7 +62,7 @@ def frecuencia(df, nombre):
     plt.hist(frecuencia_dominante_relajado, alpha=0.5, label='Relajado', color='green')
     plt.xlabel('Frecuencia Dominante')
     plt.ylabel('Frecuencia')
-    plt.title('Distribución de Frecuencias Dominantes por Grupo', nombre)
+    plt.title('Distribución de Frecuencias Dominantes por Grupo ' + nombre)
     plt.legend(loc='upper right')
     plt.show()
     
@@ -82,7 +82,7 @@ def patrones_activacion(df, nombre):
         
     plt.xlabel('Grupo')
     plt.ylabel('Media de la señal filtrada')
-    plt.title('Media de la señal filtrada para cada grupo y estado', nombre)
+    plt.title('Media de la señal filtrada para cada grupo y estado ' + nombre)
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -163,3 +163,9 @@ Además, la desviación típica, que son las barras, cada vez es mayor, indicand
 #Distancia entre picos
 diferencias_entre_picos(df_andrea, 'Brazo_Andrea')
 diferencias_entre_picos(df_ana, 'Brazo_Ana')
+'''
+A1_filtrado es la diferencia de los Grupo1 y Grupo2. El max y min de detrás de los grupos es 
+para indicar si es la diferencia entre máximos o mínimos.
+
+Contraido y relajado están separados en dos csv
+'''
