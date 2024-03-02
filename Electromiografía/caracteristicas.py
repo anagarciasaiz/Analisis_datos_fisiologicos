@@ -94,24 +94,47 @@ Sin embargo, a su vez, la media de la relajación disminuye, indicando que el m�
 Además, la desviación típica, que son las barras, cada vez es mayor, indicando que la señal es más variable, lo que indica que el músculo está más fatigado.'''
 
 #Distancia entre picos
-# Filtrar por el estado "Contraido" y obtener el valor máximo de "A1_filtrado" para cada grupo
-maximos_contraido = df[df['Estado'] == 'Contraido'].groupby('Grupo')['A1_filtrado'].max().reset_index()
 
-# Mostrar el grupo, el estado y el valor máximo de A1_filtrado para cada grupo y estado
-print(maximos_contraido)
-
-# Filtrar por el estado "Relajado" y obtener el valor mínimo de "A1_filtrado" para cada grupo
-minimos_contraidos = df[df['Estado'] == 'Relajado'].groupby('Grupo')['A1_filtrado'].min().reset_index()
-
-# Mostrar el grupo, el estado y el valor mínimo de A1_filtrado para cada grupo y estado
-print(minimos_contraidos)
-
-# Calcular la diferencia de los valores dos a dos
-diferencias_contraidos_max = maximos_contraido.diff().dropna()
-diferencias_contraido_min = minimos_contraidos.diff().dropna()
-#Añadimos columna indicando los grupos que se comparan
-diferencias_contraidos_max['Grupo1'] = maximos_contraido['Grupo'].values[:-1]
-diferencias_contraidos_max['Grupo2'] = maximos_contraido['Grupo'].values[1:]
-#Eliminamos la columna de grupo
-diferencias_contraidos_max = diferencias_contraidos_max.drop(columns='Grupo')
-print(diferencias_contraidos_max)
+def diferencias_entre_picos(df):
+    # Filtrar por el estado "Contraido" y obtener el valor máximo de "A1_filtrado" para cada grupo
+    maximos_contraido = df[df['Estado'] == 'Contraido'].groupby('Grupo')['A1_filtrado'].max().reset_index()
+    minimos_contraido = df[df['Estado'] == 'Contraido'].groupby('Grupo')['A1_filtrado'].min().reset_index()
+    
+    # Filtrar por el estado "Relajado" y obtener el valor mínimo de "A1_filtrado" para cada grupo
+    minimos_relajados = df[df['Estado'] == 'Relajado'].groupby('Grupo')['A1_filtrado'].min().reset_index()
+    maximos_relajados = df[df['Estado'] == 'Relajado'].groupby('Grupo')['A1_filtrado'].max().reset_index()
+    
+    # Calcular la diferencia de los valores dos a dos
+    diferencias_contraidos_max = maximos_contraido.diff().dropna()  
+    diferencias_contraido_min = minimos_contraido.diff().dropna()
+    diferencias_relajados_max = maximos_relajados.diff().dropna()
+    diferencias_relajados_min = minimos_relajados.diff().dropna()
+    
+    #Añadimos columna indicando los grupos que se comparan
+    diferencias_contraidos_max['Grupo1_max'] = maximos_contraido['Grupo'].values[:-1]
+    diferencias_contraidos_max['Grupo2_max'] = maximos_contraido['Grupo'].values[1:]
+    diferencias_contraido_min['Grupo1_min'] = minimos_contraido['Grupo'].values[:-1]
+    diferencias_contraido_min['Grupo2_min'] = minimos_contraido['Grupo'].values[1:]
+    
+    diferencias_relajados_max['Grupo1_max'] = maximos_relajados['Grupo'].values[:-1]
+    diferencias_relajados_max['Grupo2_max'] = maximos_relajados['Grupo'].values[1:]
+    diferencias_relajados_min['Grupo1_min'] = minimos_relajados['Grupo'].values[:-1]
+    diferencias_relajados_min['Grupo2_min'] = minimos_relajados['Grupo'].values[1:]
+    
+    #Eliminamos la columna de grupo
+    diferencias_contraidos_max = diferencias_contraidos_max.drop(columns='Grupo')
+    diferencias_contraido_min = diferencias_contraido_min.drop(columns='Grupo')
+    
+    diferencias_relajados_max = diferencias_relajados_max.drop(columns='Grupo')
+    diferencias_relajados_min = diferencias_relajados_min.drop(columns='Grupo')
+    
+    #unimos los dataframes de max y min
+    diferencias_contraidos = pd.concat([diferencias_contraidos_max, diferencias_contraido_min], axis=1)
+    diferencias_relajados = pd.concat([diferencias_relajados_max, diferencias_relajados_min], axis=1)
+    
+    #extraemos los datos a csv
+    diferencias_contraidos.to_csv(os.path.join(ruta, 'diferencias_contraidos.csv'), index=False)
+    diferencias_relajados.to_csv(os.path.join(ruta, 'diferencias_relajados.csv'), index=False)
+    
+    return diferencias_contraidos, diferencias_relajados
+diferencias_entre_picos(df)
